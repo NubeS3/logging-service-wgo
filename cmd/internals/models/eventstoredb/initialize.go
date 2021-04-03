@@ -10,7 +10,7 @@ var client *goes.Client
 
 func Initialize() {
 	var err error
-	client, err = goes.NewClient(nil, viper.GetString("Esdb_url"))
+	client, err = goes.NewClient(nil, "http://"+viper.GetString("Esdb_url"))
 	if err != nil {
 		log.Fatal(err)
 	}
