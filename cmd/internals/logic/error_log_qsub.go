@@ -24,6 +24,7 @@ func GetErrLogQsub() stan.Subscription {
 	qsub, _ := sc.QueueSubscribe(viper.GetString("ErrLog_subject"), "error-log-qgroup", func(msg *stan.Msg) {
 		go func() {
 			var data ErrLog
+			fmt.Println(msg.String())
 			_ = json.Unmarshal(msg.Data, &data)
 			_ = eventstoredb.SaveErrorLog(data)
 		}()
