@@ -16,11 +16,6 @@ type ErrLog struct {
 }
 
 func GetErrLogQsub() stan.Subscription {
-	sc, err := stan.Connect(viper.GetString("Cluster_id"), viper.GetString("Client_id"), stan.NatsURL("nats://"+viper.GetString("Nats_url")))
-	if err != nil {
-		panic(fmt.Errorf("Fatal error connecting nats stream: %s \n", err))
-	}
-
 	qsub, _ := sc.QueueSubscribe(viper.GetString("ErrLog_subject"), "error-log-qgroup", func(msg *stan.Msg) {
 		go func() {
 			var data ErrLog
