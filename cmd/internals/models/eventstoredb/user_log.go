@@ -5,7 +5,7 @@ import (
 )
 
 func UserLog(data interface{}) error {
-	event := goes.NewEvent("user-"+goes.NewUUID(), "userEvent", data, nil)
+	event := goes.NewEvent("user-"+goes.NewUUID(), "user", data, nil)
 	writer := client.NewStreamWriter("userStream")
 	err := writer.Append(nil, event)
 	if err != nil {

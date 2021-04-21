@@ -2,9 +2,10 @@ package logic
 
 import (
 	"encoding/json"
-	"github.com/nats-io/stan.go"
 	"log-service-go/cmd/internals/models/eventstoredb"
 	"time"
+
+	"github.com/nats-io/stan.go"
 )
 
 type AccessKeyLog struct {
@@ -22,7 +23,11 @@ func GetAccessKeyLogQsub() stan.Subscription {
 		go func() {
 			var data AccessKeyLog
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.UserLog(data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("keyStream", data)
+			} else {
+				_ = eventstoredb.AccessKeyLog(data)
+			}
 		}()
 	})
 	return qsub

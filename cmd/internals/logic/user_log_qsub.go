@@ -2,9 +2,10 @@ package logic
 
 import (
 	"encoding/json"
-	"github.com/nats-io/stan.go"
 	"log-service-go/cmd/internals/models/eventstoredb"
 	"time"
+
+	"github.com/nats-io/stan.go"
 )
 
 type UserLog struct {
@@ -27,7 +28,11 @@ func GetUserLogQsub() stan.Subscription {
 		go func() {
 			var data UserLog
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.UserLog(data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("userStream", data)
+			} else {
+				_ = eventstoredb.UserLog(data)
+			}
 		}()
 	})
 	return qsub

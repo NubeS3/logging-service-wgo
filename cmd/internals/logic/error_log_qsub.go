@@ -3,24 +3,25 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/nats-io/stan.go"
-	"github.com/spf13/viper"
 	"log-service-go/cmd/internals/models/eventstoredb"
-	"time"
+
+	"github.com/nats-io/stan.go"
 )
 
 type ErrLog struct {
-	Content string    `json:"content"`
-	Type    string    `json:"type"`
-	At      time.Time `json:"at"`
+	EventLog Event  `json:"event_log"`
+	Error    string `json:"content"`
 }
 
 func GetErrLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(viper.GetString("ErrLog_subject"), "error-log-qgroup", func(msg *stan.Msg) {
+	qsub, _ := sc.QueueSubscribe(errSubj, "error-log-qgroup", func(msg *stan.Msg) {
 		go func() {
 			var data ErrLog
 			fmt.Println(msg.String())
 			_ = json.Unmarshal(msg.Data, &data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("errorStream", data.Error)
+			}
 			_ = eventstoredb.SaveErrorLog(data)
 		}()
 	})

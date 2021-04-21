@@ -2,12 +2,14 @@ package logic
 
 import (
 	"encoding/json"
-	"github.com/nats-io/stan.go"
 	"log-service-go/cmd/internals/models/eventstoredb"
 	"time"
+
+	"github.com/nats-io/stan.go"
 )
 
 type FileLog struct {
+	EventLog    Event     `json:"event_log"`
 	Id          string    `json:"id"`
 	FId         string    `json:"f_id"`
 	Name        string    `json:"name"`
@@ -20,6 +22,7 @@ type FileLog struct {
 }
 
 type StagingFileLog struct {
+	EventLog    Event     `json:"event_log"`
 	Name        string    `json:"name"`
 	Size        int64     `json:"size"`
 	BucketId    string    `json:"bucket_id"`
@@ -30,6 +33,7 @@ type StagingFileLog struct {
 }
 
 type UploadSuccessFileLog struct {
+	EventLog    Event     `json:"event_log"`
 	Id          string    `json:"id"`
 	FId         string    `json:"f_id"`
 	Name        string    `json:"name"`
@@ -55,7 +59,11 @@ func GetFileDownloadedLogQsub() stan.Subscription {
 		go func() {
 			var data FileLog
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.FileDownloadedLog(data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("fileStream", data)
+			} else {
+				_ = eventstoredb.FileDownloadedLog(data)
+			}
 		}()
 	})
 	return qsub
@@ -66,7 +74,11 @@ func GetFileStagingLogQsub() stan.Subscription {
 		go func() {
 			var data StagingFileLog
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.FileStagingLog(data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("fileStream", data)
+			} else {
+				_ = eventstoredb.FileStagingLog(data)
+			}
 		}()
 	})
 	return qsub
@@ -77,7 +89,11 @@ func GetFileUploadedLogQsub() stan.Subscription {
 		go func() {
 			var data FileLog
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.FileUploadedLog(data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("fileStream", data)
+			} else {
+				_ = eventstoredb.FileUploadedLog(data)
+			}
 		}()
 	})
 	return qsub
@@ -88,7 +104,11 @@ func GetFileUploadedSuccessLogQsub() stan.Subscription {
 		go func() {
 			var data UploadSuccessFileLog
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.FileUploadedSuccessLog(data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("fileStream", data)
+			} else {
+				_ = eventstoredb.FileUploadedSuccessLog(data)
+			}
 		}()
 	})
 	return qsub
@@ -99,7 +119,11 @@ func GetFolderLogQsub() stan.Subscription {
 		go func() {
 			var data FolderEvent
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.FolderLog(data)
+			if data.EventLog.Type == "query" {
+				eventstoredb.Query("folderStream", data)
+			} else {
+				_ = eventstoredb.FolderLog(data)
+			}
 		}()
 	})
 	return qsub

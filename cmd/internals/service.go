@@ -2,13 +2,14 @@ package internals
 
 import (
 	"fmt"
-	"github.com/nats-io/stan.go"
-	"github.com/spf13/viper"
 	"log-service-go/cmd/internals/logic"
 	"log-service-go/cmd/internals/models/eventstoredb"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/nats-io/stan.go"
+	"github.com/spf13/viper"
 )
 
 func Run() error {

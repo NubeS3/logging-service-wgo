@@ -5,7 +5,7 @@ import (
 )
 
 func BucketLog(data interface{}) error {
-	event := goes.NewEvent("user-"+goes.NewUUID(), "bucketEvent", data, nil)
+	event := goes.NewEvent("user-"+goes.NewUUID(), "bucket", data, nil)
 	writer := client.NewStreamWriter("bucketStream")
 	err := writer.Append(nil, event)
 	if err != nil {

@@ -2,17 +2,18 @@ package logic
 
 import (
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/joho/godotenv"
 	"github.com/nats-io/stan.go"
 	"github.com/spf13/viper"
-	"log"
-	"time"
 )
 
 var (
 	sc stan.Conn
 
-	mailSubj              string
+	// mailSubj              string
 	errSubj               string
 	uploadFileSubj        string
 	downloadFileSubj      string
@@ -50,7 +51,7 @@ func Initialize() {
 		return
 	}
 
-	mailSubj = env["mailSubj"]
+	// mailSubj = env["mailSubj"]
 	errSubj = env["errSubj"]
 	uploadFileSubj = env["uploadFileSubj"]
 	downloadFileSubj = env["downloadFileSubj"]
