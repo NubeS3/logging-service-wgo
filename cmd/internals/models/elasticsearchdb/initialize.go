@@ -16,6 +16,31 @@ var (
 	client *elastic.Client
 )
 
+const errLogMapping = `
+{
+	"settings":{
+		"number_of_shards": 1,
+		"number_of_replicas": 0
+	},
+	"mappings":{
+		"err-log":{
+			"properties":{
+				"type":{
+					"type":"keyword"
+				},
+				"content":{
+					"type":"text",
+					"store": true,
+					"fielddata": true
+				},
+				"at":{
+					"type":"date"
+				},
+			}
+		}
+	}
+}`
+
 func Initialize() {
 	ctx, cancel := context.WithTimeout(nil, ContextDuration)
 	defer cancel()
@@ -42,4 +67,21 @@ func Initialize() {
 		panic(err)
 	}
 	fmt.Printf("Elasticsearch returned with code %d and version %s\n", code, info.Version.Number)
+
+	exists, err := client.IndexExists("error-log").Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("error-log").BodyString(errLogMapping).Do(ctx)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
 }
