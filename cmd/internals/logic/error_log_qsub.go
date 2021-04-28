@@ -30,6 +30,10 @@ func GetErrLogQSubMsgHandler() *nats.Subscription {
 			queryRes, _ := elasticsearchdb.ReadErrLogInDateRange(from, to, data.Limit, data.Offset)
 			jsonData, _ := json.Marshal(queryRes)
 			_ = msg.Respond(jsonData)
+		} else if data.Type == "Type" {
+			queryRes, _ := elasticsearchdb.ReadErrLogByType(data.Data[0], data.Limit, data.Offset)
+			jsonData, _ := json.Marshal(queryRes)
+			_ = msg.Respond(jsonData)
 		}
 	})
 
