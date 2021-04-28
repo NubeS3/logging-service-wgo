@@ -33,7 +33,7 @@ type Event struct {
 
 func Initialize() {
 	var err error
-	sc, err = stan.Connect(viper.GetString("Cluster_id"), viper.GetString("Client_id"), stan.NatsURL("nats://"+viper.GetString("Nats_url")))
+	sc, err = stan.Connect(viper.GetString("Cluster_id"), viper.GetString("Client_id"), stan.NatsURL(viper.GetString("Nats_url")))
 	if err != nil {
 		panic(fmt.Errorf("fatal error connecting nats stream: %s", err))
 	}
