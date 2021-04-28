@@ -16,33 +16,28 @@ var (
 	client *elastic.Client
 )
 
-const errLogMapping = `
-{
+const errLogMapping = `{
 	"settings":{
-		"number_of_shards": 1,
-		"number_of_replicas": 0
+		"number_of_shards":1,
+		"number_of_replicas":0
 	},
 	"mappings":{
-		"err-log":{
-			"properties":{
-				"type":{
-					"type":"keyword"
-				},
-				"content":{
-					"type":"text",
-					"store": true,
-					"fielddata": true
-				},
-				"at":{
-					"type":"date"
-				},
+		"properties":{
+			"type":{
+				"type":"keyword"
+			},
+			"content":{
+				"type":"text"
+			},
+			"at":{
+				"type":"date"
 			}
 		}
 	}
 }`
 
 func Initialize() {
-	ctx, cancel := context.WithTimeout(nil, ContextDuration)
+	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
 	defer cancel()
 
 	dbUrl := viper.GetString("ELASTIC_URL")
@@ -52,6 +47,7 @@ func Initialize() {
 		elastic.SetURL(dbUrl),
 		elastic.SetHealthcheckInterval(10*time.Second),
 		elastic.SetGzip(true),
+		elastic.SetSniff(false),
 		elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ERR ", log.LstdFlags)),
 		elastic.SetInfoLog(log.New(os.Stdout, "ELASTIC INFO ", log.LstdFlags)),
 	)

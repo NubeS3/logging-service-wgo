@@ -2,9 +2,11 @@ package internals
 
 import (
 	"fmt"
+	"github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
 	"github.com/spf13/viper"
 	"log-service-go/cmd/internals/logic"
+	"log-service-go/cmd/internals/models/elasticsearchdb"
 	"os"
 	"os/signal"
 	"syscall"
@@ -21,33 +23,42 @@ func Run() error {
 	}
 
 	//eventstoredb.Initialize()
+	elasticsearchdb.Initialize()
 	logic.Initialize()
 
-	subs := []stan.Subscription{}
-	subs = append(subs, logic.GetErrLogQsub())
-	subs = append(subs, logic.GetBucketLogQsub())
-	subs = append(subs, logic.GetAccessKeyLogQsub())
-	subs = append(subs, logic.GetFileDownloadedLogQsub())
-	subs = append(subs, logic.GetFileStagingLogQsub())
-	subs = append(subs, logic.GetFileUploadedLogQsub())
-	subs = append(subs, logic.GetFileUploadedSuccessLogQsub())
-	subs = append(subs, logic.GetFolderLogQsub())
-	subs = append(subs, logic.GetKeyPairLogQsub())
-	subs = append(subs, logic.GetUserLogQsub())
+	stanSubs := []stan.Subscription{}
+	natsSubs := []*nats.Subscription{}
+	stanSubs = append(stanSubs, logic.GetErrLogQsub())
+	natsSubs = append(natsSubs, logic.GetErrLogQSubMsgHandler())
+	//stanSubs = append(stanSubs, logic.GetBucketLogQsub())
+	//stanSubs = append(stanSubs, logic.GetAccessKeyLogQsub())
+	//stanSubs = append(stanSubs, logic.GetFileDownloadedLogQsub())
+	//stanSubs = append(stanSubs, logic.GetFileStagingLogQsub())
+	//stanSubs = append(stanSubs, logic.GetFileUploadedLogQsub())
+	//stanSubs = append(stanSubs, logic.GetFileUploadedSuccessLogQsub())
+	//stanSubs = append(stanSubs, logic.GetFolderLogQsub())
+	//stanSubs = append(stanSubs, logic.GetKeyPairLogQsub())
+	//stanSubs = append(stanSubs, logic.GetUserLogQsub())
 
 	sigs := make(chan os.Signal, 1)
 	cleanupDone := make(chan bool)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		<-sigs
-		for len(subs) > 0 {
-			_ = subs[0].Unsubscribe()
-			subs = subs[1:]
+		for len(stanSubs) > 0 {
+			_ = stanSubs[0].Unsubscribe()
+			stanSubs = stanSubs[1:]
+		}
+		for len(natsSubs) > 0 {
+			_ = natsSubs[0].Unsubscribe()
+			natsSubs = natsSubs[1:]
 		}
 		cleanupDone <- true
 	}()
 
 	fmt.Println("Listening for log events")
+	//
+	//go logic.TestErr()
 	<-cleanupDone
 	return nil
 }

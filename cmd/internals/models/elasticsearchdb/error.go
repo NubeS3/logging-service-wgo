@@ -10,9 +10,8 @@ import (
 )
 
 func WriteErrLog(errLog common.ErrLog) {
-	ctx, cancel := context.WithTimeout(nil, ContextDuration)
+	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
 	defer cancel()
-	// Index a tweet (using JSON serialization)
 	_, err := client.Index().
 		Index("err-log").
 		BodyJson(errLog).
@@ -22,12 +21,12 @@ func WriteErrLog(errLog common.ErrLog) {
 	}
 }
 
-func ReadErrLogAfterDate(from time.Time, to time.Time) ([]common.ErrLog, error) {
-	ctx, cancel := context.WithTimeout(nil, ContextDuration)
+func ReadErrLogInDateRange(from, to time.Time, limit, offset int) ([]common.ErrLog, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
 	defer cancel()
 
 	query := elastic.NewRangeQuery("at").From(from).To(to)
-	res, err := client.Search().Index("err-log").Query(query).Pretty(true).Do(ctx)
+	res, err := client.Search().Index("err-log").Query(query).From(offset).Size(limit).Do(ctx)
 	if err != nil {
 		log.Error(err)
 	}
@@ -43,12 +42,12 @@ func ReadErrLogAfterDate(from time.Time, to time.Time) ([]common.ErrLog, error) 
 	return logRes, err
 }
 
-func ReadErrLogByType(t string) ([]common.ErrLog, error) {
-	ctx, cancel := context.WithTimeout(nil, ContextDuration)
+func ReadErrLogByType(t string, limit, offset int) ([]common.ErrLog, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
 	defer cancel()
 
-	query := elastic.NewTermQuery("type", t)
-	res, err := client.Search().Index("err-log").Query(query).Pretty(true).Do(ctx)
+	query := elastic.NewMatchQuery("type", t)
+	res, err := client.Search().Index("err-log").Query(query).From(offset).Size(limit).Do(ctx)
 	if err != nil {
 		log.Error(err)
 	}
