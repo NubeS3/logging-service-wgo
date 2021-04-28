@@ -27,8 +27,8 @@ func Initialize() {
 		elastic.SetURL(dbUrl),
 		elastic.SetHealthcheckInterval(10*time.Second),
 		elastic.SetGzip(true),
-		elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ", log.LstdFlags)),
-		elastic.SetInfoLog(log.New(os.Stdout, "", log.LstdFlags)),
+		elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ERR ", log.LstdFlags)),
+		elastic.SetInfoLog(log.New(os.Stdout, "ELASTIC INFO ", log.LstdFlags)),
 	)
 
 	if err != nil {
