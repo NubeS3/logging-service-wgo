@@ -5,7 +5,6 @@ import (
 	"github.com/nats-io/stan.go"
 	"github.com/spf13/viper"
 	"log-service-go/cmd/internals/logic"
-	"log-service-go/cmd/internals/models/eventstoredb"
 	"os"
 	"os/signal"
 	"syscall"
@@ -20,8 +19,6 @@ func Run() error {
 	if err != nil {             // Handle errors reading the config file
 		return err
 	}
-
-	eventstoredb.Initialize()
 
 	subs := []stan.Subscription{}
 	subs = append(subs, logic.GetErrLogQsub())

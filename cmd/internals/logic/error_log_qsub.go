@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/nats-io/stan.go"
 	"github.com/spf13/viper"
-	"log-service-go/cmd/internals/models/eventstoredb"
 	"time"
 )
 
@@ -26,7 +25,7 @@ func GetErrLogQsub() stan.Subscription {
 			var data ErrLog
 			fmt.Println(msg.String())
 			_ = json.Unmarshal(msg.Data, &data)
-			_ = eventstoredb.SaveErrorLog(data)
+			//_ = eventstoredb.SaveErrorLog(data)
 		}()
 	})
 	return qsub
