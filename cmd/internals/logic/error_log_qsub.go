@@ -9,18 +9,12 @@ import (
 )
 
 type ErrLog struct {
-	Content string    `json:"content"`
-	Type    string    `json:"type"`
-	At      time.Time `json:"at"`
+	EventLog Event  `json:"event_log"`
+	Error    string `json:"content"`
 }
 
 func GetErrLogQsub() stan.Subscription {
-	sc, err := stan.Connect(viper.GetString("Cluster_id"), viper.GetString("Client_id"), stan.NatsURL("nats://"+viper.GetString("Nats_url")))
-	if err != nil {
-		panic(fmt.Errorf("Fatal error connecting nats stream: %s \n", err))
-	}
-
-	qsub, _ := sc.QueueSubscribe(viper.GetString("ErrLog_subject"), "error-log-qgroup", func(msg *stan.Msg) {
+	qsub, _ := sc.QueueSubscribe(errSubj, "error-log-qgroup", func(msg *stan.Msg) {
 		go func() {
 			var data ErrLog
 			fmt.Println(msg.String())

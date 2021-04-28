@@ -20,8 +20,20 @@ func Run() error {
 		return err
 	}
 
+	//eventstoredb.Initialize()
+	logic.Initialize()
+
 	subs := []stan.Subscription{}
 	subs = append(subs, logic.GetErrLogQsub())
+	subs = append(subs, logic.GetBucketLogQsub())
+	subs = append(subs, logic.GetAccessKeyLogQsub())
+	subs = append(subs, logic.GetFileDownloadedLogQsub())
+	subs = append(subs, logic.GetFileStagingLogQsub())
+	subs = append(subs, logic.GetFileUploadedLogQsub())
+	subs = append(subs, logic.GetFileUploadedSuccessLogQsub())
+	subs = append(subs, logic.GetFolderLogQsub())
+	subs = append(subs, logic.GetKeyPairLogQsub())
+	subs = append(subs, logic.GetUserLogQsub())
 
 	sigs := make(chan os.Signal, 1)
 	cleanupDone := make(chan bool)
