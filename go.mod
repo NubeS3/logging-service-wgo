@@ -3,9 +3,7 @@ module log-service-go
 go 1.15
 
 require (
-	github.com/jetbasrawi/go.geteventstore v1.0.0 // indirect
-	github.com/jetbasrawi/go.geteventstore.testfeed v0.0.0-20160808110805-4e3be493c211 // indirect
-	github.com/joho/godotenv v1.3.0 // indirect
+	github.com/golang-module/carbon v1.3.7
 	github.com/nats-io/nats-server/v2 v2.2.1 // indirect
 	github.com/nats-io/nats-streaming-server v0.21.1 // indirect
 	github.com/nats-io/nats.go v1.10.1-0.20210330225420-a0b1f60162f8
