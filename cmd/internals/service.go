@@ -30,6 +30,8 @@ func Run() error {
 	natsSubs := []*nats.Subscription{}
 	stanSubs = append(stanSubs, logic.GetErrLogQsub())
 	natsSubs = append(natsSubs, logic.GetErrLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetFileLogQsub())
+	natsSubs = append(natsSubs, logic.GetFileLogQSubMsgHandler())
 	//stanSubs = append(stanSubs, logic.GetBucketLogQsub())
 	//stanSubs = append(stanSubs, logic.GetAccessKeyLogQsub())
 	//stanSubs = append(stanSubs, logic.GetFileDownloadedLogQsub())

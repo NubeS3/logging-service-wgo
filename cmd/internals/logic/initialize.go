@@ -13,9 +13,7 @@ var (
 
 	// mailSubj              string
 	errSubj               string
-	uploadFileSubj        string
-	downloadFileSubj      string
-	stagingFileSubj       string
+	fileSubj              string
 	uploadFileSuccessSubj string
 	userSubj              string
 	bucketSubj            string
@@ -38,9 +36,7 @@ func Initialize() {
 
 	// mailSubj = env["mailSubj"]
 	errSubj = viper.GetString("errSubj")
-	uploadFileSubj = viper.GetString("uploadFileSubj")
-	downloadFileSubj = viper.GetString("downloadFileSubj")
-	stagingFileSubj = viper.GetString("stagingFileSubj")
+	fileSubj = viper.GetString("fileSubj")
 	uploadFileSuccessSubj = viper.GetString("uploadFileSuccessSubj")
 	userSubj = viper.GetString("userSubj")
 	bucketSubj = viper.GetString("bucketSubj")
