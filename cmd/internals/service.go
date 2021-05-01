@@ -2,8 +2,8 @@ package internals
 
 import (
 	"fmt"
-	"log-service-go/cmd/internals/logic"
-	"log-service-go/cmd/internals/models/elasticsearchdb"
+	"logging-service-wgo/cmd/internals/logic"
+	"logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"os"
 	"os/signal"
 	"syscall"

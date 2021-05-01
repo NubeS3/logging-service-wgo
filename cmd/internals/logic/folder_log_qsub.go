@@ -2,8 +2,8 @@ package logic
 
 import (
 	"encoding/json"
-	"log-service-go/cmd/internals/models/common"
-	"log-service-go/cmd/internals/models/elasticsearchdb"
+	"logging-service-wgo/cmd/internals/models/common"
+	"logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"time"
 
 	"github.com/nats-io/nats.go"
@@ -32,7 +32,7 @@ func GetFolderLogQSubMsgHandler() *nats.Subscription {
 			jsonData, _ := json.Marshal(queryRes)
 			_ = msg.Respond(jsonData)
 		} else if data.Type == "All" {
-			queryRes, _ := elasticsearchdb.ReadFolderLog(data.Limit, data.Offset)
+			queryRes, _ := elasticsearchdb.ReadFolderLogByType(data.Data[0], data.Limit, data.Offset)
 			jsonData, _ := json.Marshal(queryRes)
 			_ = msg.Respond(jsonData)
 		}

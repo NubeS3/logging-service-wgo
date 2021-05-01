@@ -2,7 +2,7 @@ package elasticsearchdb
 
 import (
 	"context"
-	"log-service-go/cmd/internals/models/common"
+	"logging-service-wgo/cmd/internals/models/common"
 	"reflect"
 	"time"
 
