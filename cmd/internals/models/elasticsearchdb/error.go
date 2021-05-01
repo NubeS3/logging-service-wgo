@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/olivere/elastic/v7"
 	"github.com/prometheus/common/log"
-	"log-service-go/cmd/internals/models/common"
+	"logging-service-wgo/cmd/internals/models/common"
 	"reflect"
 	"time"
 )

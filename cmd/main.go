@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"log-service-go/cmd/internals"
+	"logging-service-wgo/cmd/internals"
 )
 
 func main() {

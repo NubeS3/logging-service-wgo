@@ -3,7 +3,7 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
-	"log-service-go/cmd/internals/models/common"
+	"logging-service-wgo/cmd/internals/models/common"
 	"time"
 )
 

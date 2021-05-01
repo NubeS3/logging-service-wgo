@@ -1,40 +1,42 @@
 package logic
 
-//
-//import (
-//	"encoding/json"
-//	"log-service-go/cmd/internals/models/eventstoredb"
-//	"time"
-//
-//	"github.com/nats-io/stan.go"
-//)
-//
-//type UserLog struct {
-//	EventLog Event `json:"event_log"`
-//
-//	Firstname string    `json:"firstname"`
-//	Lastname  string    `json:"lastname"`
-//	Username  string    `json:"username"`
-//	Pass      string    `json:"password"`
-//	Email     string    `json:"email"`
-//	Dob       time.Time `json:"dob"`
-//	Company   string    `json:"company"`
-//	Gender    bool      `json:"gender"`
-//	IsActive  bool      `json:"is_active"`
-//	IsBanned  bool      `json:"is_banned"`
-//}
-//
-//func GetUserLogQsub() stan.Subscription {
-//	qsub, _ := sc.QueueSubscribe(userSubj, "user-log-qgroup", func(msg *stan.Msg) {
-//		go func() {
-//			var data UserLog
-//			_ = json.Unmarshal(msg.Data, &data)
-//			if data.EventLog.Type == "query" {
-//				eventstoredb.Query("userStream", data)
-//			} else {
-//				_ = eventstoredb.UserLog(data)
-//			}
-//		}()
-//	})
-//	return qsub
-//}
+import (
+	"encoding/json"
+	"logging-service-wgo/cmd/internals/models/common"
+	"logging-service-wgo/cmd/internals/models/elasticsearchdb"
+	"time"
+
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/stan.go"
+)
+
+func GetUserLogQsub() stan.Subscription {
+	qsub, _ := sc.QueueSubscribe(errSubj, "user-log-qgroup", func(msg *stan.Msg) {
+		go func() {
+			var data common.UserLog
+			_ = json.Unmarshal(msg.Data, &data)
+			elasticsearchdb.WriteUserLog(data)
+		}()
+	})
+	return qsub
+}
+
+func GetUserLogQSubMsgHandler() *nats.Subscription {
+	qsub, _ := nc.QueueSubscribe(errSubj+"query", "user-log-query", func(msg *nats.Msg) {
+		var data common.Req
+		_ = json.Unmarshal(msg.Data, &data)
+		if data.Type == "Date" {
+			from, _ := time.Parse(time.RFC3339, data.Data[0])
+			to, _ := time.Parse(time.RFC3339, data.Data[1])
+			queryRes, _ := elasticsearchdb.ReadUserLogInDateRange(from, to, data.Limit, data.Offset)
+			jsonData, _ := json.Marshal(queryRes)
+			_ = msg.Respond(jsonData)
+		} else if data.Type == "Type" {
+			queryRes, _ := elasticsearchdb.ReadUserLogByType(data.Data[0], data.Limit, data.Offset)
+			jsonData, _ := json.Marshal(queryRes)
+			_ = msg.Respond(jsonData)
+		}
+	})
+
+	return qsub
+}

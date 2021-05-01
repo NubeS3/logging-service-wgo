@@ -1,4 +1,4 @@
-module log-service-go
+module logging-service-wgo
 
 go 1.15
 
