@@ -62,3 +62,24 @@ func ReadErrLogByType(t string, limit, offset int) ([]common.ErrLog, error) {
 
 	return logRes, err
 }
+
+func ReadErrLog(limit, offset int) ([]common.ErrLog, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
+	defer cancel()
+
+	query := elastic.NewMatchAllQuery()
+	res, err := client.Search().Index("err-log").Query(query).From(offset).Size(limit).Do(ctx)
+	if err != nil {
+		log.Error(err)
+	}
+
+	var el common.ErrLog
+	logRes := []common.ErrLog{}
+	for _, item := range res.Each(reflect.TypeOf(el)) {
+		if e, ok := item.(common.ErrLog); ok {
+			logRes = append(logRes, e)
+		}
+	}
+
+	return logRes, err
+}

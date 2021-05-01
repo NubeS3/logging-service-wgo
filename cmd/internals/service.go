@@ -32,15 +32,14 @@ func Run() error {
 	natsSubs = append(natsSubs, logic.GetErrLogQSubMsgHandler())
 	stanSubs = append(stanSubs, logic.GetFileLogQsub())
 	natsSubs = append(natsSubs, logic.GetFileLogQSubMsgHandler())
-	//stanSubs = append(stanSubs, logic.GetBucketLogQsub())
-	//stanSubs = append(stanSubs, logic.GetAccessKeyLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileDownloadedLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileStagingLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileUploadedLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileUploadedSuccessLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFolderLogQsub())
-	//stanSubs = append(stanSubs, logic.GetKeyPairLogQsub())
-	//stanSubs = append(stanSubs, logic.GetUserLogQsub())
+	stanSubs = append(stanSubs, logic.GetUnauthCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetUnauthCountLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetAuthCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetAuthCountLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetAccessKeyCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetAccessKeyCountLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetSignedCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetSignedCountLogQSubMsgHandler())
 
 	sigs := make(chan os.Signal, 1)
 	cleanupDone := make(chan bool)
@@ -60,7 +59,7 @@ func Run() error {
 
 	fmt.Println("Listening for log events")
 	//
-	//go logic.TestErr()
+	go logic.TestErr()
 	//go logic.TestSendFile()
 	//go logic.TestFile()
 	<-cleanupDone

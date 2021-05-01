@@ -29,7 +29,7 @@ func TestErr() {
 func TestSendFile() {
 	log := common.FileLog{
 		Event: common.Event{
-			Type: "Add",
+			Type: "Upload",
 			Date: time.Now(),
 		},
 		FId:         "1234",

@@ -75,6 +75,115 @@ const fileLogMapping = `{
 		}
 	}
 }`
+const unauthReqCountMapping = `{
+	"settings":{
+		"number_of_shards":1,
+		"number_of_replicas":0
+	},
+	"mappings":{
+		"properties":{
+			"type":{
+				"type":"keyword"
+			},
+			"at":{
+				"type":"date"
+			},
+			"method":{
+				"type":"keyword"
+			},
+			"req":{
+				"type":"text"
+			},
+			"source_ip":{
+				"type":"keyword"
+			}
+		}
+	}
+}`
+const authReqCountMapping = `{
+	"settings":{
+		"number_of_shards":1,
+		"number_of_replicas":0
+	},
+	"mappings":{
+		"properties":{
+			"type":{
+				"type":"keyword"
+			},
+			"at":{
+				"type":"date"
+			},
+			"method":{
+				"type":"keyword"
+			},
+			"req":{
+				"type":"text"
+			},
+			"source_ip":{
+				"type":"keyword"
+			},
+			"user_id":{
+				"type":"keyword"
+			}
+		}
+	}
+}`
+const accessKeyReqCountMapping = `{
+	"settings":{
+		"number_of_shards":1,
+		"number_of_replicas":0
+	},
+	"mappings":{
+		"properties":{
+			"type":{
+				"type":"keyword"
+			},
+			"at":{
+				"type":"date"
+			},
+			"method":{
+				"type":"keyword"
+			},
+			"req":{
+				"type":"text"
+			},
+			"source_ip":{
+				"type":"keyword"
+			},
+			"key":{
+				"type":"keyword"
+			}
+		}
+	}
+}`
+const signedCountMapping = `{
+	"settings":{
+		"number_of_shards":1,
+		"number_of_replicas":0
+	},
+	"mappings":{
+		"properties":{
+			"type":{
+				"type":"keyword"
+			},
+			"at":{
+				"type":"date"
+			},
+			"method":{
+				"type":"keyword"
+			},
+			"req":{
+				"type":"text"
+			},
+			"source_ip":{
+				"type":"keyword"
+			},
+			"public":{
+				"type":"keyword"
+			}
+		}
+	}
+}`
 
 func Initialize() {
 	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
@@ -129,6 +238,74 @@ func Initialize() {
 	if !exists {
 		// Create a new index.
 		createIndex, err := client.CreateIndex("file-log").BodyString(fileLogMapping).Do(ctx)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
+
+	exists, err = client.IndexExists("unauth-req-log").Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("unauth-req-log").BodyString(unauthReqCountMapping).Do(ctx)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
+
+	exists, err = client.IndexExists("auth-req-log").Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("auth-req-log").BodyString(authReqCountMapping).Do(ctx)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
+
+	exists, err = client.IndexExists("access-key-req-log").Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("access-key-req-log").BodyString(accessKeyReqCountMapping).Do(ctx)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
+
+	exists, err = client.IndexExists("signed-req-log").Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("signed-req-log").BodyString(signedCountMapping).Do(ctx)
 		if err != nil {
 			// Handle error
 			panic(err)

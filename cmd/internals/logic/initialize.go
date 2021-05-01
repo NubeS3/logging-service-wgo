@@ -12,6 +12,7 @@ var (
 	nc *nats.Conn
 
 	// mailSubj              string
+	reqSubj               string
 	errSubj               string
 	fileSubj              string
 	uploadFileSuccessSubj string
@@ -35,6 +36,7 @@ func Initialize() {
 	}
 
 	// mailSubj = env["mailSubj"]
+	reqSubj = viper.GetString("reqSubj")
 	errSubj = viper.GetString("errSubj")
 	fileSubj = viper.GetString("fileSubj")
 	uploadFileSuccessSubj = viper.GetString("uploadFileSuccessSubj")

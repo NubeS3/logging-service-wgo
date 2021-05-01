@@ -4,6 +4,7 @@ import "time"
 
 type FileLog struct {
 	Event
+	Id          string    `json:"id"`
 	FId         string    `json:"file_id"`
 	FileName    string    `json:"file_name"`
 	Size        int64     `json:"size"`
