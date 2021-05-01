@@ -2,14 +2,15 @@ package internals
 
 import (
 	"fmt"
-	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
-	"github.com/spf13/viper"
 	"log-service-go/cmd/internals/logic"
 	"log-service-go/cmd/internals/models/elasticsearchdb"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/stan.go"
+	"github.com/spf13/viper"
 )
 
 func Run() error {
@@ -30,15 +31,16 @@ func Run() error {
 	natsSubs := []*nats.Subscription{}
 	stanSubs = append(stanSubs, logic.GetErrLogQsub())
 	natsSubs = append(natsSubs, logic.GetErrLogQSubMsgHandler())
-	//stanSubs = append(stanSubs, logic.GetBucketLogQsub())
-	//stanSubs = append(stanSubs, logic.GetAccessKeyLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileDownloadedLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileStagingLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileUploadedLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFileUploadedSuccessLogQsub())
-	//stanSubs = append(stanSubs, logic.GetFolderLogQsub())
-	//stanSubs = append(stanSubs, logic.GetKeyPairLogQsub())
-	//stanSubs = append(stanSubs, logic.GetUserLogQsub())
+	stanSubs = append(stanSubs, logic.GetAccessKeyLogQsub())
+	natsSubs = append(natsSubs, logic.GetAccessKeyLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetBucketLogQsub())
+	natsSubs = append(natsSubs, logic.GetBucketLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetFolderLogQsub())
+	natsSubs = append(natsSubs, logic.GetFolderLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetKeyPairLogQsub())
+	natsSubs = append(natsSubs, logic.GetKeyPairLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetUserLogQsub())
+	natsSubs = append(natsSubs, logic.GetUserLogQSubMsgHandler())
 
 	sigs := make(chan os.Signal, 1)
 	cleanupDone := make(chan bool)
