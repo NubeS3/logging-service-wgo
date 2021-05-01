@@ -2,14 +2,15 @@ package internals
 
 import (
 	"fmt"
-	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
-	"github.com/spf13/viper"
-	"log-service-go/cmd/internals/logic"
-	"log-service-go/cmd/internals/models/elasticsearchdb"
+	"logging-service-wgo/cmd/internals/logic"
+	"logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/stan.go"
+	"github.com/spf13/viper"
 )
 
 func Run() error {
@@ -40,6 +41,16 @@ func Run() error {
 	natsSubs = append(natsSubs, logic.GetAccessKeyCountLogQSubMsgHandler())
 	stanSubs = append(stanSubs, logic.GetSignedCountLogQsub())
 	natsSubs = append(natsSubs, logic.GetSignedCountLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetAccessKeyLogQsub())
+	natsSubs = append(natsSubs, logic.GetAccessKeyLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetBucketLogQsub())
+	natsSubs = append(natsSubs, logic.GetBucketLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetFolderLogQsub())
+	natsSubs = append(natsSubs, logic.GetFolderLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetKeyPairLogQsub())
+	natsSubs = append(natsSubs, logic.GetKeyPairLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetUserLogQsub())
+	natsSubs = append(natsSubs, logic.GetUserLogQSubMsgHandler())
 
 	sigs := make(chan os.Signal, 1)
 	cleanupDone := make(chan bool)
@@ -59,7 +70,7 @@ func Run() error {
 
 	fmt.Println("Listening for log events")
 	//
-	go logic.TestErr()
+	//go logic.TestErr()
 	//go logic.TestSendFile()
 	//go logic.TestFile()
 	<-cleanupDone

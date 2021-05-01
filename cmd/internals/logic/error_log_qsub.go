@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
-	"log-service-go/cmd/internals/models/common"
-	"log-service-go/cmd/internals/models/elasticsearchdb"
+	"logging-service-wgo/cmd/internals/models/common"
+	"logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"time"
 )
 
