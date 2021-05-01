@@ -35,6 +35,46 @@ const errLogMapping = `{
 		}
 	}
 }`
+const fileLogMapping = `{
+	"settings":{
+		"number_of_shards":1,
+		"number_of_replicas":0
+	},
+	"mappings":{
+		"properties":{
+			"type":{
+				"type":"keyword"
+			},
+			"at":{
+				"type":"date"
+			},
+			"file_id": {
+				"type":"keyword"
+			},
+			"file_name": {
+				"type": "text"
+			},
+			"size": {
+				"type": "long"
+			},
+			"bucket_id": {
+				"type": "keyword"
+			},
+			"content_type": {
+				"type": "keyword"
+			},
+			"upload_date": {
+				"type": "date"	
+			},
+			"path": {
+				"type": "text"
+			},
+			"is_hidden": {
+				"type": "boolean"
+			}
+		}
+	}
+}`
 
 func Initialize() {
 	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
@@ -72,6 +112,23 @@ func Initialize() {
 	if !exists {
 		// Create a new index.
 		createIndex, err := client.CreateIndex("error-log").BodyString(errLogMapping).Do(ctx)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
+
+	exists, err = client.IndexExists("file-log").Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("file-log").BodyString(fileLogMapping).Do(ctx)
 		if err != nil {
 			// Handle error
 			panic(err)

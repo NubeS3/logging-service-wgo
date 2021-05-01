@@ -61,6 +61,8 @@ func Run() error {
 	fmt.Println("Listening for log events")
 	//
 	//go logic.TestErr()
+	//go logic.TestSendFile()
+	//go logic.TestFile()
 	<-cleanupDone
 	return nil
 }

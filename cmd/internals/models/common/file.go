@@ -1,10 +1,15 @@
 package common
 
-// type FileLog struct {
-// 	Event
-// 	Id       string `json:"id"`
-// 	FolderId string `json:"fid"`
-// 	BucketId string `json:"bid"`
-// 	IsHidden bool   `json:"is_hidden"`
-// 	Path     string `json:"path"`
-// }
+import "time"
+
+type FileLog struct {
+	Event
+	FId         string    `json:"file_id"`
+	FileName    string    `json:"file_name"`
+	Size        int64     `json:"size"`
+	BucketId    string    `json:"bucket_id"`
+	ContentType string    `json:"content_type"`
+	UploadDate  time.Time `json:"upload_date"`
+	Path        string    `json:"path"`
+	IsHidden    bool      `json:"is_hidden"`
+}
