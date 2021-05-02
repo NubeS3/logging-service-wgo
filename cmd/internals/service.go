@@ -2,8 +2,8 @@ package internals
 
 import (
 	"fmt"
-	"logging-service-wgo/cmd/internals/logic"
-	"logging-service-wgo/cmd/internals/models/elasticsearchdb"
+	"github.com/NubeS3/logging-service-wgo/cmd/internals/logic"
+	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"os"
 	"os/signal"
 	"syscall"
