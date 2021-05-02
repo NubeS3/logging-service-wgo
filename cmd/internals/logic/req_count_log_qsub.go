@@ -2,10 +2,10 @@ package logic
 
 import (
 	"encoding/json"
+	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/common"
+	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
-	"logging-service-wgo/cmd/internals/models/common"
-	"logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"strconv"
 	"time"
 )

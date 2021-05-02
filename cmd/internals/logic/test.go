@@ -3,7 +3,7 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
-	"logging-service-wgo/cmd/internals/models/common"
+	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/common"
 	"time"
 )
 

@@ -1,4 +1,4 @@
-module logging-service-wgo
+module github.com/NubeS3/logging-service-wgo
 
 go 1.15
 

@@ -2,7 +2,7 @@ package elasticsearchdb
 
 import (
 	"context"
-	"logging-service-wgo/cmd/internals/models/common"
+	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/common"
 	"reflect"
 	"time"
 
