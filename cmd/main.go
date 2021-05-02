@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/NubeS3/logging-service-wgo/cmd/internals"
 	"log"
-	"logging-service-wgo/cmd/internals"
 )
 
 func main() {
