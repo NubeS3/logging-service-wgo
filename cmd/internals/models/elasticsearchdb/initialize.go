@@ -198,7 +198,7 @@ const bandwidthMapping = `{
 				"type":"date"
 			},
 			"size":{
-				"type":"number"
+				"type":"long"
 			},
 			"bucket_id":{
 				"type":"keyword"
