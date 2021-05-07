@@ -184,6 +184,34 @@ const signedCountMapping = `{
 		}
 	}
 }`
+const bandwidthMapping = `{
+	"settings":{
+		"number_of_shards":1,
+		"number_of_replicas":0
+	},
+	"mappings":{
+		"properties":{
+			"type":{
+				"type":"keyword"
+			},
+			"at":{
+				"type":"date"
+			},
+			"size":{
+				"type":"number"
+			},
+			"bucket_id":{
+				"type":"keyword"
+			},
+			"uid":{
+				"type":"keyword"
+			},
+			"from":{
+				"type":"keyword"
+			}
+		}
+	}
+}`
 
 func Initialize() {
 	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
@@ -306,6 +334,23 @@ func Initialize() {
 	if !exists {
 		// Create a new index.
 		createIndex, err := client.CreateIndex("signed-req-log").BodyString(signedCountMapping).Do(ctx)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !createIndex.Acknowledged {
+			// Not acknowledged
+		}
+	}
+
+	exists, err = client.IndexExists("bandwidth-log").Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if !exists {
+		// Create a new index.
+		createIndex, err := client.CreateIndex("bandwidth-log").BodyString(bandwidthMapping).Do(ctx)
 		if err != nil {
 			// Handle error
 			panic(err)

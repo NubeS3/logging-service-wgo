@@ -12,15 +12,16 @@ var (
 	nc *nats.Conn
 
 	// mailSubj              string
-	reqSubj               string
-	errSubj               string
-	fileSubj              string
-	uploadFileSuccessSubj string
-	userSubj              string
-	bucketSubj            string
-	folderSubj            string
-	accessKeySubj         string
-	keyPairSubj           string
+	reqSubj  string
+	errSubj  string
+	fileSubj string
+	//uploadFileSuccessSubj string
+	userSubj      string
+	bucketSubj    string
+	folderSubj    string
+	accessKeySubj string
+	keyPairSubj   string
+	bandwidthSubj string
 )
 
 func Initialize() {
@@ -39,10 +40,11 @@ func Initialize() {
 	reqSubj = viper.GetString("reqSubj")
 	errSubj = viper.GetString("errSubj")
 	fileSubj = viper.GetString("fileSubj")
-	uploadFileSuccessSubj = viper.GetString("uploadFileSuccessSubj")
+	//uploadFileSuccessSubj = viper.GetString("uploadFileSuccessSubj")
 	userSubj = viper.GetString("userSubj")
 	bucketSubj = viper.GetString("bucketSubj")
 	folderSubj = viper.GetString("folderSubj")
 	accessKeySubj = viper.GetString("accessKeySubj")
 	keyPairSubj = viper.GetString("keyPairSubj")
+	bandwidthSubj = viper.GetString("bandwidthSubj")
 }

@@ -51,6 +51,8 @@ func Run() error {
 	natsSubs = append(natsSubs, logic.GetKeyPairLogQSubMsgHandler())
 	stanSubs = append(stanSubs, logic.GetUserLogQsub())
 	natsSubs = append(natsSubs, logic.GetUserLogQSubMsgHandler())
+	stanSubs = append(stanSubs, logic.GetBandwidthQsub())
+	natsSubs = append(natsSubs, logic.GetBandwidthMsgHandler())
 
 	sigs := make(chan os.Signal, 1)
 	cleanupDone := make(chan bool)
