@@ -65,7 +65,7 @@ const fileLogMapping = `{
 			},
 			"uid": {
 				"type": "text"
-			},
+			}
 		}
 	}
 }`
