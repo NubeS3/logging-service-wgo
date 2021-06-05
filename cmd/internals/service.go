@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/logic"
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/elasticsearchdb"
-	"os"
-	"os/signal"
-	"syscall"
-
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
 	"github.com/spf13/viper"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func Run() error {
@@ -75,6 +74,7 @@ func Run() error {
 	//go logic.TestErr()
 	//go logic.TestSendFile()
 	//go logic.TestFile()
+
 	<-cleanupDone
 	return nil
 }

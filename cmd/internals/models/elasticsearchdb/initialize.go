@@ -60,18 +60,12 @@ const fileLogMapping = `{
 			"bucket_id": {
 				"type": "keyword"
 			},
-			"content_type": {
-				"type": "keyword"
-			},
 			"upload_date": {
 				"type": "date"	
 			},
-			"path": {
+			"uid": {
 				"type": "text"
 			},
-			"is_hidden": {
-				"type": "boolean"
-			}
 		}
 	}
 }`

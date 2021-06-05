@@ -32,14 +32,12 @@ func TestSendFile() {
 			Type: "Upload",
 			Date: time.Now(),
 		},
-		FId:         "1234",
-		FileName:    "test.file",
-		Size:        1024,
-		BucketId:    "12345",
-		ContentType: "test/test",
-		UploadDate:  time.Now(),
-		Path:        "/test-bucket/test",
-		IsHidden:    false,
+		FId:        "1234",
+		FileName:   "test.file",
+		Size:       1024,
+		BucketId:   "12345",
+		UploadDate: time.Now(),
+		Uid:        "0",
 	}
 
 	jsonTestData, _ := json.Marshal(log)
