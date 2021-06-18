@@ -4,6 +4,7 @@ type ReqLog struct {
 	Method   string `json:"method"`
 	Req      string `json:"req"`
 	SourceIp string `json:"source_ip"`
+	Class    string `json:"class,omitempty"`
 }
 
 type UnauthReqLog struct {
@@ -27,4 +28,10 @@ type SignedReqLog struct {
 	Event
 	ReqLog
 	Public string `json:"public"`
+}
+
+type ReqCountByClass struct {
+	A float64 `json:"a"`
+	B float64 `json:"b"`
+	C float64 `json:"c"`
 }

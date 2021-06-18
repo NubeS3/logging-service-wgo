@@ -22,10 +22,16 @@ func Run() error {
 		return err
 	}
 
+	println("Logger Service v1.0.6-hotfix")
 	//eventstoredb.Initialize()
+	println("Init elasticDB")
 	elasticsearchdb.Initialize()
+	println("Finish init elasticDB")
+	println("Connecting to NATS")
 	logic.Initialize()
+	println("Connected to NATS")
 
+	println("Init msg handlers")
 	stanSubs := []stan.Subscription{}
 	natsSubs := []*nats.Subscription{}
 	stanSubs = append(stanSubs, logic.GetErrLogQsub())
@@ -52,12 +58,15 @@ func Run() error {
 	natsSubs = append(natsSubs, logic.GetUserLogQSubMsgHandler())
 	stanSubs = append(stanSubs, logic.GetBandwidthQsub())
 	natsSubs = append(natsSubs, logic.GetBandwidthMsgHandler())
+	natsSubs = append(natsSubs, logic.GetReportQSubMsgHandler())
+	println("Finish init msg handlers")
 
 	sigs := make(chan os.Signal, 1)
 	cleanupDone := make(chan bool)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		<-sigs
+		println("Cleaning logger")
 		for len(stanSubs) > 0 {
 			_ = stanSubs[0].Unsubscribe()
 			stanSubs = stanSubs[1:]
@@ -66,6 +75,7 @@ func Run() error {
 			_ = natsSubs[0].Unsubscribe()
 			natsSubs = natsSubs[1:]
 		}
+		println("Cleaning done")
 		cleanupDone <- true
 	}()
 

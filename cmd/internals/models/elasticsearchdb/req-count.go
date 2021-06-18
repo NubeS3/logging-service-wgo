@@ -31,6 +31,8 @@ func WriteAuthReqCountLog(countLog common.AuthReqLog) {
 	if err != nil {
 		log.Error(err)
 	}
+
+	client.Search().Index()
 }
 
 func WriteAccessKeyReqCountLog(countLog common.AccessKeyReqLog) {
@@ -309,4 +311,39 @@ func CountSignedReqCount(accessKey string, limit, offset int) (int64, error) {
 	}
 
 	return res.TotalHits(), err
+}
+
+//
+
+func CountReqByClassUsingUidInDateRAnge(uid string, from, to time.Time) (*common.ReqCountByClass, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), ContextDuration)
+	defer cancel()
+
+	termQ := elastic.NewMatchQuery("user_id", uid)
+	dateQ := elastic.NewRangeQuery("at").From(from).To(to)
+	query := elastic.NewBoolQuery().Must(termQ).Must(dateQ)
+	res, err := client.Search().Index("auth-req-log", "access-key-req-log").Query(query).Do(ctx)
+	if err != nil {
+		log.Error(err)
+	}
+
+	reqCount := common.ReqCountByClass{
+		A: 0,
+		B: 0,
+		C: 0,
+	}
+	var l common.ReqLog
+	for _, item := range res.Each(reflect.TypeOf(l)) {
+		if rl, ok := item.(common.ReqLog); ok {
+			if rl.Class == "A" {
+				reqCount.A += 1
+			} else if rl.Class == "B" {
+				reqCount.B += 1
+			} else if rl.Class == "C" {
+				reqCount.C += 1
+			}
+		}
+	}
+
+	return &reqCount, nil
 }

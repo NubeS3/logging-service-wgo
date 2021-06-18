@@ -3,6 +3,7 @@ module github.com/NubeS3/logging-service-wgo
 go 1.15
 
 require (
+	github.com/coreos/etcd v3.3.13+incompatible
 	github.com/golang-module/carbon v1.3.7 // indirect
 	github.com/nats-io/nats-server/v2 v2.2.1 // indirect
 	github.com/nats-io/nats-streaming-server v0.21.1 // indirect

@@ -2,6 +2,7 @@ package logic
 
 import (
 	"fmt"
+	"github.com/coreos/etcd/pkg/stringutil"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
 	"github.com/spf13/viper"
@@ -26,7 +27,8 @@ var (
 
 func Initialize() {
 	var err error
-	sc, err = stan.Connect(viper.GetString("Cluster_id"), viper.GetString("Client_id"), stan.NatsURL(viper.GetString("Nats_url")))
+	println("connecting to NATS server at " + viper.GetString("Nats_url"))
+	sc, err = stan.Connect(viper.GetString("Cluster_id"), viper.GetString("Client_id")+stringutil.RandomStrings(5, 1)[0], stan.NatsURL(viper.GetString("Nats_url")))
 	if err != nil {
 		panic(fmt.Errorf("fatal error connecting nats stream: %s", err))
 	}

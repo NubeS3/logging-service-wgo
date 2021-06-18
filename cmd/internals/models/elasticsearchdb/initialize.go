@@ -118,6 +118,9 @@ const authReqCountMapping = `{
 			},
 			"user_id":{
 				"type":"keyword"
+			},
+			"class":{
+				"type":"keyword"
 			}
 		}
 	}
@@ -146,6 +149,9 @@ const accessKeyReqCountMapping = `{
 			},
 			"key":{
 				"type":"keyword"
+			},
+			"class":{
+				"type":"keyword"
 			}
 		}
 	}
@@ -173,6 +179,9 @@ const signedCountMapping = `{
 				"type":"keyword"
 			},
 			"public":{
+				"type":"keyword"
+			},
+			"class":{
 				"type":"keyword"
 			}
 		}
@@ -213,10 +222,11 @@ func Initialize() {
 
 	dbUrl := viper.GetString("ELASTIC_URL")
 
+	println("connecting to elasticdb: " + dbUrl)
 	var err error
 	client, err = elastic.NewClient(
 		elastic.SetURL(dbUrl),
-		elastic.SetHealthcheckInterval(10*time.Second),
+		elastic.SetHealthcheckInterval(30*time.Second),
 		elastic.SetGzip(true),
 		elastic.SetSniff(false),
 		elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ERR ", log.LstdFlags)),

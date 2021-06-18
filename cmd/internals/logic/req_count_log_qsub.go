@@ -164,3 +164,24 @@ func GetSignedCountLogQSubMsgHandler() *nats.Subscription {
 
 	return qsub
 }
+
+func GetReportQSubMsgHandler() *nats.Subscription {
+	qsub, _ := nc.QueueSubscribe(reqSubj+"report"+"query", "report-log-query", func(msg *nats.Msg) {
+		var data common.Req
+		_ = json.Unmarshal(msg.Data, &data)
+		if data.Type == "Date" {
+			from, _ := time.Parse(time.RFC3339, data.Data[0])
+			to, _ := time.Parse(time.RFC3339, data.Data[1])
+			uid := data.Data[2]
+			queryRes, _ := elasticsearchdb.CountReqByClassUsingUidInDateRAnge(uid, from, to)
+			jsonData, _ := json.Marshal(queryRes)
+			_ = msg.Respond(jsonData)
+		} else if data.Type == "All" {
+			queryRes, _ := elasticsearchdb.CountReqByClassUsingUidInDateRAnge(data.Data[0], time.Time{}, time.Now())
+			jsonData, _ := json.Marshal(queryRes)
+			_ = msg.Respond(jsonData)
+		}
+	})
+
+	return qsub
+}
