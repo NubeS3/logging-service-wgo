@@ -17,7 +17,7 @@ func GetUnauthCountLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteUnauthReqCountLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 
@@ -29,7 +29,7 @@ func GetAuthCountLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteAuthReqCountLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 
@@ -41,7 +41,7 @@ func GetAccessKeyCountLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteAccessKeyReqCountLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 
