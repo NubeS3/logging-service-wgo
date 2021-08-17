@@ -17,7 +17,7 @@ func GetFolderLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteFolderLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 

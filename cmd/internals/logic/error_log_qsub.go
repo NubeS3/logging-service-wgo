@@ -16,7 +16,7 @@ func GetErrLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteErrLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 

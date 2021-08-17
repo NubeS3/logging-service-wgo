@@ -19,7 +19,7 @@ func GetFileLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteFileLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 
 	return qsub
 }

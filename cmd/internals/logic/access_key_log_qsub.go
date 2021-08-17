@@ -17,7 +17,7 @@ func GetAccessKeyLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteAccessKeyLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 

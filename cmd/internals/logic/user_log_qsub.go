@@ -17,7 +17,7 @@ func GetUserLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteUserLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 

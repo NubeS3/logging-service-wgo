@@ -17,7 +17,7 @@ func GetBucketLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteBucketLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 

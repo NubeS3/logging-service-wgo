@@ -53,7 +53,7 @@ func GetSignedCountLogQsub() *nats.Subscription {
 			elasticsearchdb.WriteSignedReqCountLog(data)
 		}()
 		msg.Ack()
-	}, nats.Durable("NUBES3"))
+	})
 	return qsub
 }
 
