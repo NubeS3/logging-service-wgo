@@ -5,19 +5,19 @@ import (
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/common"
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 	"strconv"
 	"time"
 )
 
-func GetBandwidthQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(bandwidthSubj, "bandwidth-log-qgroup", func(msg *stan.Msg) {
+func GetBandwidthQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+bandwidthSubj, "bandwidth-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.BandwidthLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteBandwidthLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 

@@ -5,7 +5,6 @@ import (
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/logic"
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 	"github.com/spf13/viper"
 	"os"
 	"os/signal"
@@ -32,31 +31,30 @@ func Run() error {
 	println("Connected to NATS")
 
 	println("Init msg handlers")
-	stanSubs := []stan.Subscription{}
-	natsSubs := []*nats.Subscription{}
-	stanSubs = append(stanSubs, logic.GetErrLogQsub())
+	var natsSubs []*nats.Subscription
+	natsSubs = append(natsSubs, logic.GetErrLogQsub())
 	natsSubs = append(natsSubs, logic.GetErrLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetFileLogQsub())
+	natsSubs = append(natsSubs, logic.GetFileLogQsub())
 	natsSubs = append(natsSubs, logic.GetFileLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetUnauthCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetUnauthCountLogQsub())
 	natsSubs = append(natsSubs, logic.GetUnauthCountLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetAuthCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetAuthCountLogQsub())
 	natsSubs = append(natsSubs, logic.GetAuthCountLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetAccessKeyCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetAccessKeyCountLogQsub())
 	natsSubs = append(natsSubs, logic.GetAccessKeyCountLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetSignedCountLogQsub())
+	natsSubs = append(natsSubs, logic.GetSignedCountLogQsub())
 	natsSubs = append(natsSubs, logic.GetSignedCountLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetAccessKeyLogQsub())
+	natsSubs = append(natsSubs, logic.GetAccessKeyLogQsub())
 	natsSubs = append(natsSubs, logic.GetAccessKeyLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetBucketLogQsub())
+	natsSubs = append(natsSubs, logic.GetBucketLogQsub())
 	natsSubs = append(natsSubs, logic.GetBucketLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetFolderLogQsub())
+	natsSubs = append(natsSubs, logic.GetFolderLogQsub())
 	natsSubs = append(natsSubs, logic.GetFolderLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetKeyPairLogQsub())
+	natsSubs = append(natsSubs, logic.GetKeyPairLogQsub())
 	natsSubs = append(natsSubs, logic.GetKeyPairLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetUserLogQsub())
+	natsSubs = append(natsSubs, logic.GetUserLogQsub())
 	natsSubs = append(natsSubs, logic.GetUserLogQSubMsgHandler())
-	stanSubs = append(stanSubs, logic.GetBandwidthQsub())
+	natsSubs = append(natsSubs, logic.GetBandwidthQsub())
 	natsSubs = append(natsSubs, logic.GetBandwidthMsgHandler())
 	natsSubs = append(natsSubs, logic.GetReportQSubMsgHandler())
 	println("Finish init msg handlers")
@@ -67,10 +65,6 @@ func Run() error {
 	go func() {
 		<-sigs
 		println("Cleaning logger")
-		for len(stanSubs) > 0 {
-			_ = stanSubs[0].Unsubscribe()
-			stanSubs = stanSubs[1:]
-		}
 		for len(natsSubs) > 0 {
 			_ = natsSubs[0].Unsubscribe()
 			natsSubs = natsSubs[1:]

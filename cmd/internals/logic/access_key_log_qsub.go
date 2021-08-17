@@ -7,17 +7,17 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 )
 
-func GetAccessKeyLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(errSubj, "access-key-log-qgroup", func(msg *stan.Msg) {
+func GetAccessKeyLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+accessKeySubj, "access-key-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.AccessKeyLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteAccessKeyLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 

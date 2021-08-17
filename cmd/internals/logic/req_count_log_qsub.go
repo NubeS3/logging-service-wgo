@@ -5,52 +5,55 @@ import (
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/common"
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 	"strconv"
 	"time"
 )
 
-func GetUnauthCountLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(reqSubj+"unauth", "unauth-count-log-qgroup", func(msg *stan.Msg) {
+func GetUnauthCountLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+reqSubj+"unauth", "unauth-count-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.UnauthReqLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteUnauthReqCountLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 
-func GetAuthCountLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(reqSubj+"auth", "auth-count-log-qgroup", func(msg *stan.Msg) {
+func GetAuthCountLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+reqSubj+"auth", "auth-count-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.AuthReqLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteAuthReqCountLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 
-func GetAccessKeyCountLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(reqSubj+"access-key", "access-key-count-log-qgroup", func(msg *stan.Msg) {
+func GetAccessKeyCountLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+reqSubj+"access-key", "access-key-count-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.AccessKeyReqLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteAccessKeyReqCountLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 
-func GetSignedCountLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(reqSubj+"signed", "signed-count-log-qgroup", func(msg *stan.Msg) {
+func GetSignedCountLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+reqSubj+"signed", "signed-count-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.SignedReqLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteSignedReqCountLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 

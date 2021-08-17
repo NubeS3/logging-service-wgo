@@ -5,18 +5,18 @@ import (
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/common"
 	"github.com/NubeS3/logging-service-wgo/cmd/internals/models/elasticsearchdb"
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 	"time"
 )
 
-func GetErrLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(errSubj, "error-log-qgroup", func(msg *stan.Msg) {
+func GetErrLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+errSubj, "error-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.ErrLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteErrLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 

@@ -7,17 +7,17 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 )
 
-func GetUserLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(errSubj, "user-log-qgroup", func(msg *stan.Msg) {
+func GetUserLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+userSubj, "user-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.UserLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteUserLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 

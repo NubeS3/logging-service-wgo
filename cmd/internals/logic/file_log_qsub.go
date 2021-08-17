@@ -9,17 +9,18 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 )
 
-func GetFileLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(fileSubj, "file-uploaded-success-log-qgroup", func(msg *stan.Msg) {
+func GetFileLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+fileSubj, "file-uploaded-success-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.FileLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteFileLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
+
 	return qsub
 }
 

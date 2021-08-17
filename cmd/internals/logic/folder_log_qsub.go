@@ -7,17 +7,17 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"github.com/nats-io/stan.go"
 )
 
-func GetFolderLogQsub() stan.Subscription {
-	qsub, _ := sc.QueueSubscribe(fileSubj, "folder-uploaded-success-log-qgroup", func(msg *stan.Msg) {
+func GetFolderLogQsub() *nats.Subscription {
+	qsub, _ := js.QueueSubscribe("NUBES3."+fileSubj, "folder-uploaded-success-log-qgroup", func(msg *nats.Msg) {
 		go func() {
 			var data common.FolderLog
 			_ = json.Unmarshal(msg.Data, &data)
 			elasticsearchdb.WriteFolderLog(data)
 		}()
-	})
+		msg.Ack()
+	}, nats.Durable("NUBES3"))
 	return qsub
 }
 

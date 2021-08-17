@@ -322,7 +322,7 @@ func CountReqByClassUsingUidInDateRAnge(uid string, from, to time.Time) (*common
 	termQ := elastic.NewMatchQuery("user_id", uid)
 	dateQ := elastic.NewRangeQuery("at").From(from).To(to)
 	query := elastic.NewBoolQuery().Must(termQ).Must(dateQ)
-	res, err := client.Search().Index("auth-req-log", "access-key-req-log").Query(query).Do(ctx)
+	res, err := client.Search().Index("auth-req-log", "access-key-req-log").Query(query).Size(10000).Do(ctx)
 	if err != nil {
 		log.Error(err)
 	}
